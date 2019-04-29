@@ -36,7 +36,7 @@ int main() {
 
 
 
-	win = SDL_CreateWindow("MainWindow", 100, 100, 1600, 800, SDL_WindowFlags::SDL_WINDOW_SHOWN);
+	win = SDL_CreateWindow("MainWindow", 100, 100, ScreenWidth, ScreenHeight, SDL_WindowFlags::SDL_WINDOW_SHOWN);
 	if (win == nullptr) {
 		cout << "Window error " << SDL_GetError() << endl;
 		SDL_Quit();
@@ -52,19 +52,33 @@ int main() {
 	}
 
 	ResourceManager::Init(ren);
-	Tilemap tilemap(20, 20, 40, 20, 4, 7);
-	tilemap.LoadTextures();
+	ResourceManager::tilemap = std::make_unique<Tilemap>(20, 20, 100, 80, 4, 6, 4);
+	Tilemap* tilemap = ResourceManager::GetTilemap();
+	tilemap->LoadTextures();
+
+	Hero* hero = ResourceManager::GetHero();
+	tilemap->SetHero(hero);
 
 	// game loop
 	bool quit = false;
 	while (!quit) {
 		// get input
 		while (SDL_PollEvent(&e)) {
+			SDL_Point p;
+			p.x = 0;
+			p.y = 0;
 			if (e.type == SDL_QUIT) {
 				quit = true;
 			}
+			else if (e.key.keysym.sym == SDLK_ESCAPE) {
+				// show menu
+			}
 			else if (e.key.keysym.sym == SDLK_SPACE) {
-				Generator::RemoveDoubleWalls(tilemap.map);
+				Generator::RemoveDoubleWalls(tilemap->map);
+			}
+			else {
+				hero->ResolveInput(e);
+				tilemap->Centralize();
 			}
 		}
 
@@ -73,7 +87,7 @@ int main() {
 		// render screen
 
 		SDL_RenderClear(ren);
-		tilemap.OnRender();
+		tilemap->OnRender();
 		SDL_RenderPresent(ren);
 	}
 
