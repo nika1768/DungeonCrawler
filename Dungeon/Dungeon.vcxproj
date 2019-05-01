@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Dominika\source\libs\SDLPack\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Dominika\source\libs\SDLPack\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Dominika\source\repos\DungeonCrawler\SDLPack\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Dominika\source\repos\DungeonCrawler\SDLPack\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\Dominika\source\libs\SDLPack\include;$(IncludePath)</IncludePath>
