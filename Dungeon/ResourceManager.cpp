@@ -45,11 +45,9 @@ SDL_Rect ResourceManager::GetRectangle(int x, int y, int w, int h)
 Hero* ResourceManager::GetHero()
 {
 	if (hero != nullptr) {
-		std::cout << "Hero returned from the void." << std::endl;
 	}
 	else {
 		hero = std::make_unique<Hero>();
-		std::cout << "A new hero was born." << std::endl;
 	}
 	return (Hero*)hero->getPtr();
 }
@@ -57,11 +55,9 @@ Hero* ResourceManager::GetHero()
 Tilemap *ResourceManager::GetTilemap()
 {
 	if (tilemap != nullptr) {
-		//std::cout << "The fog lift from the dark world." << std::endl;
 	}
 	else {
 		tilemap = std::make_unique<Tilemap>();
-		std::cout << "A new world unveils, welcoming the champion." << std::endl;
 	}
 	return (Tilemap*)tilemap->getPtr();
 }

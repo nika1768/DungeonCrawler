@@ -21,24 +21,211 @@ public:
 
 		// fill it with rooms
 		if (room_count <= 0) {
-			room_count = 0;
-			while (findRoom(map, room_count + 2, min, max)) {
-				room_count++;
-			}
+			while (findRoom(map, min, max));
 		}
 		else {
 			for (int i = 0; i < room_count; i++)
-				findRoom(map, i + 2, min, max);
+				findRoom(map, min, max);
 		}
 
 		// remove double walls
 		RemoveDoubleWalls(map);
 
-		// add doors
-		//AddDoors(map, room_count + 2, room_count + 5);
+		return map;
 
-		// remove ints
-		FixMap(map, room_count + 2);
+	}
+
+	static Map getFullMap2(int x_rooms, int y_rooms, int x_room_size, int y_room_size, int room_count) {
+		Map map = getMap(x_rooms * x_room_size + x_rooms + 1, y_rooms * y_room_size + y_rooms + 1);
+
+		Map room_map = getMap(x_rooms, y_rooms);
+
+		bool found;
+
+		// fill initial rooms
+		for (int r = 0; r < std::min(room_count,x_rooms*y_rooms); r++) {
+
+			found = false;
+			
+			for(int trial = 0; trial < 10; trial++){
+
+				int i = std::rand() % y_rooms;
+				int j = std::rand() % x_rooms;
+
+				if (room_map[i][j] == 0) {
+					room_map[i][j] = r;
+					found = true;
+				}
+
+				if (found)
+					break;
+			}
+
+			if (!found) {
+				for(int i = 0; i < y_rooms; i++){
+					for (int j = 0; j < x_rooms; j++) {
+						if (room_map[i][j] == 0) {
+							room_map[i][j] = r;
+							found = true;
+							break;
+						}
+					}
+
+					if (found)
+						break;
+				}
+			}
+
+		}
+
+		// enlarge existing rooms to fill the map
+		int actual_room_count = x_rooms * y_rooms;
+
+		while (actual_room_count > room_count) {
+			found = false;
+
+			for(int trial = 0; trial < 5; trial++){
+				int i = std::rand() % y_rooms;
+				int j = std::rand() % x_rooms;
+
+				if (room_map[i][j] > 0) {
+
+					if (i > 0) {
+						if (room_map[i - 1][j] == 0) {
+							room_map[i - 1][j] = room_map[i][j];
+							found = true;
+							actual_room_count--;
+						}
+					}
+					if (j > 0) {
+						if (room_map[i][j - 1] == 0) {
+							room_map[i][j - 1] = room_map[i][j];
+							found = true;
+							actual_room_count--;
+						}
+					}
+					if (i < y_rooms-1) {
+						if (room_map[i + 1][j] == 0) {
+							room_map[i + 1][j] = room_map[i][j];
+							found = true;
+							actual_room_count--;
+						}
+					}
+					if (j < x_rooms-1) {
+						if (room_map[i][j + 1] == 0) {
+							room_map[i][j + 1] = room_map[i][j];
+							found = true;
+							actual_room_count--;
+						}
+					}
+
+
+				}
+
+				if (found)
+					break;
+
+			}
+
+			if (!found) {
+				
+
+				for (int i = 0; i < y_rooms; i++) {
+					for (int j = 0; j < x_rooms; j++) {
+						if (room_map[i][j] > 0) {
+
+							if (i > 0) {
+								if (room_map[i - 1][j] == 0) {
+									room_map[i - 1][j] = room_map[i][j];
+									found = true;
+									actual_room_count--;
+								}
+							}
+							if (j > 0) {
+								if (room_map[i][j - 1] == 0) {
+									room_map[i][j - 1] = room_map[i][j];
+									found = true;
+									actual_room_count--;
+								}
+							}
+							if (i < y_rooms - 1) {
+								if (room_map[i + 1][j] == 0) {
+									room_map[i + 1][j] = room_map[i][j];
+									found = true;
+									actual_room_count--;
+								}
+							}
+							if (j < x_rooms - 1) {
+								if (room_map[i][j + 1] == 0) {
+									room_map[i][j + 1] = room_map[i][j];
+									found = true;
+									actual_room_count--;
+								}
+							}
+						}
+
+						if (found)
+							break;
+
+					}
+
+					if (found)
+						break;
+
+				}
+
+			}
+
+		}
+
+		// fill map according to room_map
+
+		// top-bottom walls
+		for (int j = 0; j < x_rooms * x_room_size + x_rooms + 1; j++) {
+			map[0][j] = 1;
+			map[map.size() - 1][j] = 1;
+		}
+
+		// left-right walls
+		for (int i = 0; i < y_rooms * y_room_size + y_rooms + 1; i++) {
+			map[i][0] = 1;
+			map[i][map[0].size() - 1] = 1;
+		}
+
+		// walls between rooms
+		for (int i = 0; i < y_rooms; i++) {
+			for (int j = 0; j < x_rooms; j++) {
+
+				if (i > 0) {
+					if (room_map[i - 1][j] != room_map[i][j]) {
+						int door = std::rand() % x_room_size;
+						for (int w = -1; w <= x_room_size; w++) {
+							if (w == door)
+								map[i * y_room_size + i][j * x_room_size + j + 1 + w] = 2;
+							else
+								map[i * y_room_size + i][j * x_room_size + j + 1 + w] = 1;
+						}
+					}
+				}
+				if (j > 0) {
+					if (room_map[i][j - 1] != room_map[i][j]) {
+						int door = std::rand() % y_room_size;
+						for (int h = -1; h <= y_room_size; h++) {
+							if(h == door)
+								map[i * y_room_size + i + 1 + h][j * x_room_size + j] = 2;
+							else
+								map[i * y_room_size + i + 1 + h][j * x_room_size + j] = 1;
+						}
+					}
+				}
+
+			}
+		}
+
+		std::cout << "Room map: " << std::endl;
+		printMap(room_map);
+		std::cout << "Map:" << std::endl;
+		printGraphicMap(map);
 
 		return map;
 
@@ -66,7 +253,7 @@ public:
 		return map;
 	}
 
-	static bool findRoom(Map& map, int fill, int min = 3, int max = 10) {
+	static bool findRoom(Map& map, int min = 3, int max = 10) {
 		if (map.size() < min && map[0].size() < min) {
 			return false;
 		}
@@ -119,7 +306,7 @@ public:
 
 		//printMap(tempMap);
 		std::cout << x << " " << y << " " << w << " " << h << std::endl;
-		createRoom(map, fill, w - 1, h - 1, x, y);
+		createRoom(map, w - 1, h - 1, x, y);
 		if (!end)
 			return false;
 		return true;
@@ -127,7 +314,7 @@ public:
 
 	}
 
-	static void createRoom(Map& map, int fill, int w, int h, int x, int y) {
+	static void createRoom(Map& map, int w, int h, int x, int y) {
 
 		for (int i = 0; i <= h; ++i) {
 			map[i + y][x] = 1;
@@ -162,37 +349,33 @@ public:
 		}
 	}
 
-	static void FixMap(Map& map, int max_int) {
+	static void AddDoors(Map& map, int room_count) {
 
-		for(int i = 0; i < map.size(); i++)
-			for (int j = 0; j < map[0].size(); j++) {
+		Map tempMap = getMap(map[0].size(), map.size());
+		for (int i = 0; i < map.size(); i++)
+			for (int j = 0; j < map[0].size(); j++)
+				tempMap[i][j] = map[i][j];
 
-				if (map[i][j] > 1 && map[i][j] <= max_int)
-					map[i][j] = 2;
+		while (room_count > 0) {
 
-				if (map[i][j] == max_int + 1)
-					map[i][j] = 3;
+			// find unexplored room
+			int lti, ltj;
+			bool found = false;
+			for(int i = 0; i < map.size(); i++){
+				for (int j = 0; j < map[0].size(); j++) {
+					if (tempMap[i][j] == 2) {
+						lti = i;
+						ltj = j;
+						found = true;
+						break;
+					}
+				}
+				if (found)
+					break;
 			}
 
-	}
+			// unexplored room around map[ri][rj]
 
-	static void AddDoors(Map& map, int max_int, int door_count) {
-
-		while (door_count > 0) {
-
-			int x = std::rand() % map.size();
-			int y = std::rand() % map[0].size();
-
-			if (map[x][y] == 1 && x > 0 && y > 0 && x < map.size()-1 && y < map[0].size()-1) {
-				if (map[x - 1][y] > 1 && map[x + 1][y] > 1 && map[x][y - 1] == 1 && map[x][y + 1] == 1) {
-					map[x][y] = max_int + 1;
-					door_count--;
-				}
-				else if (map[x - 1][y] == 1 && map[x + 1][y] == 1 && map[x][y - 1] > 1 && map[x][y + 1] > 1) {
-					map[x][y] = max_int + 1;
-					door_count--;
-				}
-			}
 
 		}
 
@@ -201,12 +384,21 @@ public:
 	static void printMap(Map& map) {
 		for (auto& line : map) {
 			for (auto& e : line) {
+				std::cout << e << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
+
+	static void printGraphicMap(Map& map) {
+		for (auto& line : map) {
+			for (auto& e : line) {
 				if (e == 0)
 					std::cout << "  ";
 				else if (e == 1)
 					std::cout << "# ";
 				else if (e == 2)
-					std::cout << "_ ";
+					std::cout << "D ";
 			}
 			std::cout << std::endl;
 		}

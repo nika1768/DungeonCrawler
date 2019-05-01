@@ -4,16 +4,13 @@
 
 class Tilemap;
 
-class Hero : public GameObject {
-
+class NPC : public GameObject {
 public:
 
-	Hero();
-	~Hero() {};
+	NPC(int,int);
+	~NPC() {};
 
 	void Move(SDL_Point& dst);
-
-	void ResolveInput(SDL_Event& e);
 
 	GameObject* getPtr() override;
 
@@ -22,5 +19,6 @@ public:
 
 private:
 
+	SDL_Point tilepos;
 
 };

@@ -6,13 +6,13 @@ Hero::Hero() {
 	tilepos.x = 5;
 	tilepos.y = 5;
 	ResourceManager::GetTilemap()->gameobjects[std::make_pair(tilepos.x, tilepos.y)] = this;
-	tex = ResourceManager::LoadTexture("pics/ghost.png");
+	tex = ResourceManager::LoadTexture("Graphics/hero.png");
 }
 
 void Hero::Move(SDL_Point& dst) {
 
-	ResourceManager::GetTilemap()->Move(this, tilepos, dst);
-	tilepos = dst;
+	if (ResourceManager::GetTilemap()->Move(this, tilepos, dst))
+		tilepos = dst;
 
 }
 

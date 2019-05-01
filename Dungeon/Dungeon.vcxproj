@@ -132,16 +132,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Bordel.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="libs.h" />
+    <ClInclude Include="NPC.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Tilemap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hero.cpp" />
+    <ClCompile Include="NPC.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

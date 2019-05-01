@@ -9,5 +9,6 @@ public:
 	virtual GameObject* getPtr() = 0;
 
 	SDL_Texture* tex;
+	SDL_Point tilepos;
 
 };

@@ -2,6 +2,7 @@
 #include "Generator.h"
 #include "ResourceManager.h"
 #include "Tilemap.h"
+#include "NPC.h"
 
 using namespace std;
 
@@ -52,12 +53,16 @@ int main() {
 	}
 
 	ResourceManager::Init(ren);
-	ResourceManager::tilemap = std::make_unique<Tilemap>(20, 20, 100, 80, 4, 6, 4);
+	ResourceManager::tilemap = std::make_unique<Tilemap>(20, 20, 10, 10, 5, 3, 30);
 	Tilemap* tilemap = ResourceManager::GetTilemap();
 	tilemap->LoadTextures();
 
 	Hero* hero = ResourceManager::GetHero();
 	tilemap->SetHero(hero);
+
+	NPC e1(20, 20);
+	NPC e2(30, 30);
+	NPC e3(10, 20);
 
 	// game loop
 	bool quit = false;
@@ -77,8 +82,7 @@ int main() {
 				Generator::RemoveDoubleWalls(tilemap->map);
 			}
 			else {
-				hero->ResolveInput(e);
-				tilemap->Centralize();
+				tilemap->ResolveInput(e);
 			}
 		}
 
