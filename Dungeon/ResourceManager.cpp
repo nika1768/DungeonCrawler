@@ -2,17 +2,20 @@
 #include "GameObject.h"
 #include "Hero.h"
 #include "Tilemap.h"
+#include "NPC.h"
 
 bool ResourceManager::Initialized = false;
 SDL_Renderer* ResourceManager::ren = nullptr;
 std::unique_ptr<Hero> ResourceManager::hero = nullptr;
 std::unique_ptr<Tilemap> ResourceManager::tilemap = nullptr;
+TTF_Font* ResourceManager::font = nullptr;
 std::map<std::string, SDL_Texture*> ResourceManager::textures;
 std::vector<std::unique_ptr<GameObject>> ResourceManager::gameobjects;
 
 void ResourceManager::Init(SDL_Renderer* renderer)
 {
 	ren = renderer;
+	font = TTF_OpenFont(font_path.c_str(), font_size);
 	Initialized = true;
 	srand(time(0));
 }
@@ -32,6 +35,24 @@ SDL_Texture* ResourceManager::LoadTexture(std::string path)
 	return tex;
 }
 
+SDL_Texture* ResourceManager::LoadTextTexture(std::string caption, Color color)
+{
+	SDL_Color col;
+	col.r = 0;
+	col.g = 0;
+	col.b = 0;
+	col.a = 255;
+	if (textures.find(caption) != textures.end()) {
+		return textures[caption];
+	}
+	else {
+		SDL_Surface* surf = TTF_RenderText_Blended(font, caption.c_str(), col);
+		auto text = SDL_CreateTextureFromSurface(ren, surf);
+		textures[caption] = text;
+		return text;
+	}
+}
+
 SDL_Rect ResourceManager::GetRectangle(int x, int y, int w, int h)
 {
 	SDL_Rect r;
@@ -44,20 +65,24 @@ SDL_Rect ResourceManager::GetRectangle(int x, int y, int w, int h)
 
 Hero* ResourceManager::GetHero()
 {
-	if (hero != nullptr) {
-	}
-	else {
-		hero = std::make_unique<Hero>();
+	if (hero == nullptr) {
+		hero = std::make_unique<Hero>(HeroLife);
 	}
 	return (Hero*)hero->getPtr();
 }
 
-Tilemap *ResourceManager::GetTilemap()
+Tilemap* ResourceManager::GetTilemap()
 {
-	if (tilemap != nullptr) {
-	}
-	else {
+	if (tilemap == nullptr) {
 		tilemap = std::make_unique<Tilemap>();
 	}
 	return (Tilemap*)tilemap->getPtr();
 }
+
+NPC* ResourceManager::CreateNPC()
+{
+	gameobjects.push_back(std::make_unique<NPC>());
+	return (NPC*)gameobjects[gameobjects.size() - 1].get();
+}
+
+

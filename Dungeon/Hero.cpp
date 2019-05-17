@@ -2,17 +2,19 @@
 #include "ResourceManager.h"
 #include "Tilemap.h"
 
-Hero::Hero() {
-	tilepos.x = 5;
-	tilepos.y = 5;
-	ResourceManager::GetTilemap()->gameobjects[std::make_pair(tilepos.x, tilepos.y)] = this;
+Hero::Hero(int life) {
+
+	this->life = life;
 	tex = ResourceManager::LoadTexture("Graphics/hero.png");
 }
 
 void Hero::Move(SDL_Point& dst) {
 
-	if (ResourceManager::GetTilemap()->Move(this, tilepos, dst))
+	if (ResourceManager::GetTilemap()->CanMove(this, tilepos, dst)) {
 		tilepos = dst;
+		ResourceManager::GetTilemap()->OnTurn();
+	}
+
 
 }
 
@@ -39,10 +41,11 @@ void Hero::ResolveInput(SDL_Event& e) {
 
 }
 
-GameObject* Hero::getPtr() {
-	return this; 
+int Hero::getLife()
+{
+	return life;
 }
 
-SDL_Point Hero::getPosition() {
-	return tilepos;
+GameObject* Hero::getPtr() {
+	return this; 
 }

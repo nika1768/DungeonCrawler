@@ -136,16 +136,19 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="Hero.h" />
+    <ClInclude Include="HeroInfo.h" />
     <ClInclude Include="libs.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Tilemap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Tilemap.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

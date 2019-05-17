@@ -3,6 +3,7 @@
 #include "ResourceManager.h"
 #include "Tilemap.h"
 #include "NPC.h"
+#include "HeroInfo.h"
 
 using namespace std;
 
@@ -13,37 +14,28 @@ SDL_Rect pos;
 SDL_Event e;
 
 int main() {
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		cout << "SDL init error " << endl;
 		return -1;
 	}
-
-	// init ttf
-
 	if (TTF_Init() != 0) {
 		cout << "TTF init error " << SDL_GetError() << endl;
 		SDL_Quit();
 		return -1;
 	}
-
-	// init img
-
 	if ((IMG_Init(IMG_INIT_PNG)) & (IMG_INIT_PNG != IMG_INIT_PNG)) {
 		cout << "IMG init errror " << SDL_GetError() << endl;
 		SDL_Quit();
 		TTF_Quit();
 		return -1;
 	}
-
-
-
 	win = SDL_CreateWindow("MainWindow", 100, 100, ScreenWidth, ScreenHeight, SDL_WindowFlags::SDL_WINDOW_SHOWN);
 	if (win == nullptr) {
 		cout << "Window error " << SDL_GetError() << endl;
 		SDL_Quit();
 		return -1;
 	}
-
 	ren = SDL_CreateRenderer(win, -1, SDL_RendererFlags::SDL_RENDERER_ACCELERATED);
 	if (ren == nullptr) {
 		cout << "Renderer error " << SDL_GetError() << endl;
@@ -58,11 +50,9 @@ int main() {
 	tilemap->LoadTextures();
 
 	Hero* hero = ResourceManager::GetHero();
+	hero->setPosition(5, 5);
 	tilemap->SetHero(hero);
-
-	NPC e1(20, 20);
-	NPC e2(30, 30);
-	NPC e3(10, 20);
+	HeroInfo heroInfo(hero);
 
 	// game loop
 	bool quit = false;
@@ -78,9 +68,6 @@ int main() {
 			else if (e.key.keysym.sym == SDLK_ESCAPE) {
 				// show menu
 			}
-			else if (e.key.keysym.sym == SDLK_SPACE) {
-				Generator::RemoveDoubleWalls(tilemap->map);
-			}
 			else {
 				tilemap->ResolveInput(e);
 			}
@@ -92,6 +79,9 @@ int main() {
 
 		SDL_RenderClear(ren);
 		tilemap->OnRender();
+		heroInfo.OnUpdate();
+		heroInfo.OnRender();
+
 		SDL_RenderPresent(ren);
 	}
 

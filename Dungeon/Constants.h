@@ -7,6 +7,10 @@ const int DefaultRenderTileSize = 64;
 static int RenderTileSize = 64;
 const int ScreenWidth = 1600;
 const int ScreenHeight = 800;
+const int HeroLife = 100;
+const int font_size = 13;
+const std::string font_path = "Resources/calibri.ttf";
+enum Color {Black};
 
 static SDL_Rect GetTileRect(int code) {
 	SDL_Rect rect;

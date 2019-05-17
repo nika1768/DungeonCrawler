@@ -222,11 +222,12 @@ public:
 			}
 		}
 
+		/*
 		std::cout << "Room map: " << std::endl;
 		printMap(room_map);
 		std::cout << "Map:" << std::endl;
 		printGraphicMap(map);
-
+		*/
 		return map;
 
 	}

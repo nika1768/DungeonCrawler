@@ -8,19 +8,20 @@ class Hero : public GameObject {
 
 public:
 
-	Hero();
+	Hero(int life);
 	~Hero() {};
 
 	void Move(SDL_Point& dst);
 
 	void ResolveInput(SDL_Event& e);
 
+	int getLife();
+
 	GameObject* getPtr() override;
 
-	SDL_Point getPosition();
 
 
 private:
-
+	int life;
 
 };

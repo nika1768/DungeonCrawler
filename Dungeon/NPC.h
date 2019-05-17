@@ -7,18 +7,14 @@ class Tilemap;
 class NPC : public GameObject {
 public:
 
-	NPC(int,int);
+	NPC();
 	~NPC() {};
 
-	void Move(SDL_Point& dst);
-
 	GameObject* getPtr() override;
-
-	SDL_Point getPosition();
+	void OnTurn() override;
 
 
 private:
-
-	SDL_Point tilepos;
+	int life;
 
 };
