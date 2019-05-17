@@ -15,14 +15,26 @@ Tilemap::Tilemap(int x, int y, int x_rooms, int y_rooms, int x_room_size, int y_
 	pos.h = map.size() * TileSize;
 	tiletex = ResourceManager::LoadTexture("Graphics/Dungeon_Tileset.png");
 
-	for (int i = 1; i < map.size(); i++) {
-		for (int j = 1; j < map[0].size(); j++) {
+	for (int i = 0; i < map.size(); i++) {
+		std::vector<GameObject*> line;
+		for (int j = 0; j < map[0].size(); j++) {
+			line.push_back(nullptr);
+		}
+		gameobjects.push_back(line);
+	}
+}
+
+void Tilemap::Populate(int chance_modifier = 20)
+{
+	for (int i = 1; i < map.size() - 1; i++) {
+		for (int j = 1; j < map[0].size() - 1; j++) {
 
 			if (map[i][j] == 0) {
-				if (std::rand() % 20 == 19) {
+				if (std::rand() % chance_modifier == 0) {
 					NPC* npc = ResourceManager::CreateNPC();
-					gameobjects[std::make_pair(j, i)] = npc;
-					npc->setPosition(j, i);
+					npc->setLife(20);
+					gameobjects[i][j] = npc;
+					npc->setPosition(i, j);
 				}
 			}
 		}
@@ -36,26 +48,42 @@ void Tilemap::SetHero(Hero* h) {
 }
 
 bool Tilemap::CanMove(GameObject* object, SDL_Point from, SDL_Point to) {
-	if (gameobjects[std::make_pair(from.x, from.y)] != object) {
+	if (gameobjects[from.y][from.x] != object) {
+		std::cout << "ERROR, invalid movement." << std::endl;
 		return false;
 	}
 	if (map[to.y][to.x] == 1) {
 		return false;
 	}
 	if (map[to.y][to.x] == 2) {
+		// DOOR LOGIC TO MOVE
 		map[to.y][to.x] = 3;
 	}
-	gameobjects[std::make_pair(from.x, from.y)] = nullptr;
-	gameobjects[std::make_pair(to.x, to.y)] = object;
+	if (gameobjects[to.y][to.x] != nullptr) {
+		return false;
+	}
+	gameobjects[from.y][from.x] = nullptr;
+	gameobjects[to.y][to.x] = object;
+
 	return true;
 }
 
 void Tilemap::OnTurn() {
 	
-	for (auto& pair : gameobjects) {
-		if (pair.second != nullptr)
-			pair.second->OnTurn();
+	std::cout << "On Turn" << std::endl;
+	int count = 0;
+
+	for (int i = 0; i < gameobjects.size(); i++) {
+		for (int j = 0; j < gameobjects[0].size(); j++) {
+			if (gameobjects[i][j] != nullptr) {
+				gameobjects[i][j]->OnTurn();
+				count++;
+			}
+		}
 	}
+
+	std::cout << "...called " << count << " times." << std::endl;
+
 }
 
 void Tilemap::ResolveInput(SDL_Event& e) {
@@ -84,10 +112,11 @@ void Tilemap::Centralize() {
 }
 
 void Tilemap::LoadTextures() {
+	hp_tex = ResourceManager::LoadTexture("Graphics/healthbar.png");
 }
 
 GameObject* Tilemap::GetObjectOnTile(SDL_Point tilepos) {
-	return (gameobjects.find(std::make_pair(tilepos.x, tilepos.y)) == gameobjects.end() ? nullptr : gameobjects[std::make_pair(tilepos.x, tilepos.y)]);
+	return gameobjects[tilepos.y][tilepos.x];
 }
 
 void Tilemap::OnRender() {
@@ -103,15 +132,32 @@ void Tilemap::OnRender() {
 		r.y += RenderTileSize;
 	}
 
-	for (auto& pair : gameobjects) {
-		SDL_Rect r;
-		r.x = pair.first.first * RenderTileSize + pos.x;
-		r.y = pair.first.second * RenderTileSize + pos.y;
-		r.w = RenderTileSize;
-		r.h = RenderTileSize;
-		if (pair.second != nullptr)
-			SDL_RenderCopy(ResourceManager::ren, pair.second->tex, nullptr, &r);
-		//std::cout << "Rendering hero at " << r.x << " " << r.y << " " << r.w << " " << r.h << std::endl;
+	for (int i = 0; i < gameobjects.size(); i++)
+	{
+		for (int j = 0; j < gameobjects[0].size(); j++)
+		{
+			if (gameobjects[i][j] != nullptr) {
+
+				if (gameobjects[i][j]->tilepos.x != j || gameobjects[i][j]->tilepos.y != i) {
+					std::cout << "Position invalid: " << gameobjects[i][j]->tilepos.x << " " << gameobjects[i][j]->tilepos.y << " - " << j << " " << i << std::endl;
+				}
+
+				SDL_Rect r;
+				r.x = j * RenderTileSize + pos.x;
+				r.y = i * RenderTileSize + pos.y;
+				r.w = RenderTileSize;
+				r.h = RenderTileSize;
+				SDL_RenderCopy(ResourceManager::ren, gameobjects[i][j]->tex, nullptr, &r);
+
+				if (gameobjects[i][j]->CanAttack()) {
+					r.w = RenderTileSize * ((NPC*)gameobjects[i][j])->getCurLife() / ((NPC*)gameobjects[i][j])->getMaxLife();
+					r.h = RenderTileSize / 8;
+					r.y += (RenderTileSize * 7 / 8);
+					SDL_RenderCopy(ResourceManager::ren, hp_tex, nullptr, &r);
+				}
+
+			}
+		}
 	}
 
 }

@@ -13,6 +13,8 @@ public:
 	Tilemap() {};
 	Tilemap(int x, int y, int x_rooms, int y_rooms, int x_room_size, int y_room_size, int room_count);
 
+	void Populate(int);
+
 	void SetHero(Hero* h);
 	bool CanMove(GameObject* object, SDL_Point from, SDL_Point to);
 	void OnTurn();
@@ -32,6 +34,9 @@ public:
 	
 
 	std::map<int, SDL_Rect> textureblocks;
-	std::map<std::pair<int,int>, GameObject*> gameobjects;
+	std::vector<std::vector<GameObject*>> gameobjects;
+
+	// FOR NOW
+	SDL_Texture* hp_tex = nullptr;
 
 };

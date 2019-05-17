@@ -16,17 +16,18 @@ public:
 
 	static SDL_Rect GetRectangle(int x, int y, int w, int h);
 
-	static Hero* GetHero();
 	static Tilemap* GetTilemap();
 
+	static Hero* GetHero();
 	static NPC* CreateNPC();
+	static void DestroyGameObject(GameObject* go);
+
 
 	static std::unique_ptr<Tilemap> tilemap; // TODO
 
 	static SDL_Renderer* ren;
 	static SDL_Window* win;
 
-	
 
 private:
 

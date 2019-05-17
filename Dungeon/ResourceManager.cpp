@@ -66,7 +66,7 @@ SDL_Rect ResourceManager::GetRectangle(int x, int y, int w, int h)
 Hero* ResourceManager::GetHero()
 {
 	if (hero == nullptr) {
-		hero = std::make_unique<Hero>(HeroLife);
+		hero = std::make_unique<Hero>(HeroLevel);
 	}
 	return (Hero*)hero->getPtr();
 }
@@ -83,6 +83,16 @@ NPC* ResourceManager::CreateNPC()
 {
 	gameobjects.push_back(std::make_unique<NPC>());
 	return (NPC*)gameobjects[gameobjects.size() - 1].get();
+}
+
+void ResourceManager::DestroyGameObject(GameObject* go)
+{
+	for (int i = 0; i < gameobjects.size(); i++) {
+		if (gameobjects[i].get() == go) {
+			gameobjects.erase(gameobjects.begin() + i);
+			break;
+		}
+	}
 }
 
 

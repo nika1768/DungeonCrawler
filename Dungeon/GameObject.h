@@ -15,6 +15,8 @@ public:
 	virtual GameObject* getPtr() = 0;
 	virtual void OnTurn() {};
 
+	virtual bool CanAttack() { return false; };
+
 	SDL_Texture* tex;
 	SDL_Point tilepos;
 

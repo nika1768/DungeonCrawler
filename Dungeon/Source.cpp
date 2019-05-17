@@ -47,6 +47,7 @@ int main() {
 	ResourceManager::Init(ren);
 	ResourceManager::tilemap = std::make_unique<Tilemap>(20, 20, 10, 10, 5, 3, 30);
 	Tilemap* tilemap = ResourceManager::GetTilemap();
+	tilemap->Populate(20);
 	tilemap->LoadTextures();
 
 	Hero* hero = ResourceManager::GetHero();
