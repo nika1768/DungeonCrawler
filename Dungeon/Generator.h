@@ -201,7 +201,7 @@ public:
 						int door = std::rand() % x_room_size;
 						for (int w = -1; w <= x_room_size; w++) {
 							if (w == door)
-								map[i * y_room_size + i][j * x_room_size + j + 1 + w] = 2;
+								map[i * y_room_size + i][j * x_room_size + j + 1 + w] = 4;
 							else
 								map[i * y_room_size + i][j * x_room_size + j + 1 + w] = 1;
 						}

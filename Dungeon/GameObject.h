@@ -12,8 +12,10 @@ public:
 
 	SDL_Point getPosition();
 
-	virtual GameObject* getPtr() = 0;
+	virtual bool isHero() { return false; }
 	virtual void OnTurn() {};
+
+	virtual SDL_Texture* getTexture() { return tex; };
 
 	virtual bool CanAttack() { return false; };
 

@@ -47,13 +47,13 @@ int main() {
 	ResourceManager::Init(ren);
 	ResourceManager::tilemap = std::make_unique<Tilemap>(20, 20, 10, 10, 5, 3, 30);
 	Tilemap* tilemap = ResourceManager::GetTilemap();
-	tilemap->Populate(20);
+	tilemap->Populate();
 	tilemap->LoadTextures();
 
 	Hero* hero = ResourceManager::GetHero();
 	hero->setPosition(5, 5);
-	tilemap->SetHero(hero);
 	HeroInfo heroInfo(hero);
+	tilemap->ClearFog();
 
 	// game loop
 	bool quit = false;

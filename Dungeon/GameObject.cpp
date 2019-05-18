@@ -4,12 +4,12 @@ void GameObject::setPosition(int y, int x) {
 	
 	auto* go = ResourceManager::GetTilemap();
 
-	if (ResourceManager::GetTilemap()->gameobjects[tilepos.y][tilepos.x] == this) {
-		ResourceManager::GetTilemap()->gameobjects[tilepos.y][tilepos.x] = nullptr;
+	if (ResourceManager::GetTilemap()->object_map[tilepos.y][tilepos.x] == this) {
+		ResourceManager::GetTilemap()->object_map[tilepos.y][tilepos.x] = nullptr;
 	}
 	tilepos.x = x;
 	tilepos.y = y;
-	ResourceManager::GetTilemap()->gameobjects[tilepos.y][tilepos.x] = this;
+	ResourceManager::GetTilemap()->object_map[tilepos.y][tilepos.x] = this;
 }
 
 SDL_Point GameObject::getPosition() {

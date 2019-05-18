@@ -10,33 +10,41 @@ class GameObject;
 class Tilemap {
 public:
 
+	// constructor + setup methods
 	Tilemap() {};
 	Tilemap(int x, int y, int x_rooms, int y_rooms, int x_room_size, int y_room_size, int room_count);
+	void LoadTextures();
+	void Populate();
 
-	void Populate(int);
-
-	void SetHero(Hero* h);
-	bool CanMove(GameObject* object, SDL_Point from, SDL_Point to);
-	void OnTurn();
+	// standard game methods
 	void ResolveInput(SDL_Event& e);
 	void Centralize();
-	void LoadTextures();
+	void OnTurn();
 	void OnRender();
 
+	// help functions
 	GameObject* GetObjectOnTile(SDL_Point tilepos);
-	Tilemap* getPtr();
+	bool CanMove(GameObject* object, SDL_Point from, SDL_Point to);
+	bool CanAttack(GameObject* attacker, GameObject* defender);
+	SDL_Point FindPath(SDL_Point from, SDL_Point to);
+	void ClearFog();
 
-	SDL_Texture* tiletex = nullptr;
-	Hero* hero = nullptr;
-	int room_count = 0;
-	SDL_Rect pos;
-	Map map;
+	// cleanup methods
+	void DestroyObject(GameObject* go);
+
+
 	
-
-	std::map<int, SDL_Rect> textureblocks;
-	std::vector<std::vector<GameObject*>> gameobjects;
-
-	// FOR NOW
+	// render attributes
 	SDL_Texture* hp_tex = nullptr;
+	SDL_Rect pos;
+	SDL_Texture* tiletex = nullptr;
+	std::map<int, SDL_Rect> textureblocks;
 
+	// tilemap attributes
+	Map map;
+	std::vector<std::vector<GameObject*>> object_map;
+	std::vector<std::vector<bool>> fog_map;
+
+	std::vector<GameObject*> units;
+	std::vector<GameObject*> items;
 };

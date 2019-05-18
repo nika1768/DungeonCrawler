@@ -6,6 +6,7 @@ class Hero;
 class GameObject;
 class Tilemap;
 class NPC;
+class Door;
 
 class ResourceManager {
 

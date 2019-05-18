@@ -18,17 +18,19 @@ public:
 
 	void Defend(int amount);
 
+	void Heal(int percentage);
+
 	void ResolveInput(SDL_Event& e);
+
+	bool isHero() override { return true; };
 
 	int getLife();
 	void setLife(int value);
 
-	GameObject* getPtr() override;
-
-
 
 private:
-	int life;
+	int max_life;
+	int cur_life;
 	int level;
 	int attack;
 

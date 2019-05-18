@@ -68,7 +68,7 @@ Hero* ResourceManager::GetHero()
 	if (hero == nullptr) {
 		hero = std::make_unique<Hero>(HeroLevel);
 	}
-	return (Hero*)hero->getPtr();
+	return (Hero*)hero.get();
 }
 
 Tilemap* ResourceManager::GetTilemap()
@@ -76,7 +76,7 @@ Tilemap* ResourceManager::GetTilemap()
 	if (tilemap == nullptr) {
 		tilemap = std::make_unique<Tilemap>();
 	}
-	return (Tilemap*)tilemap->getPtr();
+	return (Tilemap*)tilemap.get();
 }
 
 NPC* ResourceManager::CreateNPC()

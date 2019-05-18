@@ -6,15 +6,16 @@
 Hero::Hero(int level) {
 
 	this->level = level;
-	this->life = 10 * level;
-	this->attack = 2 * level;
+	max_life = 10 * level;
+	cur_life = max_life;
+	attack = 2 * level;
 	tex = ResourceManager::LoadTexture("Graphics/hero.png");
 }
 
 void Hero::Move(SDL_Point& dst) {
 	tilepos = dst;
+	ResourceManager::GetTilemap()->ClearFog();
 	ResourceManager::GetTilemap()->OnTurn();
-	
 }
 
 void Hero::Attack(NPC* defender) {
@@ -27,6 +28,13 @@ void Hero::Attack(NPC* defender) {
 
 void Hero::Defend(int amount) {
 
+	cur_life -= amount;
+
+}
+
+void Hero::Heal(int percentage)
+{
+	cur_life = std::min(max_life, cur_life + max_life * percentage / 100);
 }
 
 void Hero::ResolveInput(SDL_Event& e) {
@@ -53,22 +61,20 @@ void Hero::ResolveInput(SDL_Event& e) {
 	if (ResourceManager::GetTilemap()->CanMove(this, tilepos, dst)) {
 		Move(dst);
 	}
-	else if (object->CanAttack()) {
-		Attack((NPC*)object);
+	else if (object != nullptr) {
+		if (object->CanAttack()) {
+			Attack((NPC*)object);
+		}
 	}
 
 }
 
 int Hero::getLife()
 {
-	return life;
+	return cur_life;
 }
 
 void Hero::setLife(int value)
 {
-	life = value;
-}
-
-GameObject* Hero::getPtr() {
-	return this; 
+	cur_life = value;
 }

@@ -22,15 +22,19 @@ public:
 	void Attack();
 	void Defend(int amount);
 
-	GameObject* getPtr() override;
 	void OnTurn() override;
 
 	bool CanAttack() override;
 
+	SDL_Texture* getTexture() override;
 private:
 
 	int max_life = 0;
 	int cur_life = 0;
 	int attack;
 
+	// is aware of player - if true, follows and tries to attack player; else moves randomly
+	bool isAware = false;
+
+	SDL_Texture* tex_aware = nullptr;
 };
