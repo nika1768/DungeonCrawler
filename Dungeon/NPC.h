@@ -15,6 +15,7 @@ public:
 	void setLife(int value);
 	void setMaxLife(int value);
 	void setCurLife(int value);
+	int getXP();
 
 	int getAttack();
 	void setAttack(int value);
@@ -28,7 +29,7 @@ public:
 
 	SDL_Texture* getTexture() override;
 private:
-
+	int level = -1; // TODO
 	int max_life = 0;
 	int cur_life = 0;
 	int attack;

@@ -6,6 +6,7 @@
 Hero::Hero(int level) {
 
 	this->level = level;
+	xp = 0;
 	max_life = 10 * level;
 	cur_life = max_life;
 	attack = 2 * level;
@@ -22,6 +23,12 @@ void Hero::Attack(NPC* defender) {
 
 	std::cout << "Attacking" << std::endl;
 	defender->Defend(attack);
+	
+	// killed enemy
+	if (defender->getCurLife() <= 0) {
+		gainXP(defender->getXP());
+	}
+
 	ResourceManager::GetTilemap()->OnTurn();
 
 }
@@ -29,6 +36,10 @@ void Hero::Attack(NPC* defender) {
 void Hero::Defend(int amount) {
 
 	cur_life -= amount;
+	if (cur_life <= 0) {
+		cur_life = 0;
+		ResourceManager::GetTilemap()->EndGame();
+	}
 
 }
 
@@ -77,4 +88,42 @@ int Hero::getLife()
 void Hero::setLife(int value)
 {
 	cur_life = value;
+}
+
+int Hero::getLevel()
+{
+	return level;
+}
+
+void Hero::setLevel(int amount)
+{
+	level = amount - 1;
+	levelUp();
+}
+
+int Hero::getAttack()
+{
+	return attack;
+}
+
+void Hero::setAttack(int amount)
+{
+	attack = amount;
+}
+
+void Hero::gainXP(int amount)
+{
+	xp += amount;
+	int cap = getLevelXPCap(level);
+	if (xp >= cap) {
+		xp -= cap;
+		levelUp();
+	}
+}
+
+void Hero::levelUp()
+{
+	level++;
+	max_life = getLevelLife(level);
+	attack = getLevelAttack(level);
 }

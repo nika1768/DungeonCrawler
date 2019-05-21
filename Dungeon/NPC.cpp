@@ -32,6 +32,11 @@ void NPC::setCurLife(int value) {
 	cur_life = value;
 }
 
+int NPC::getXP()
+{
+	return getLevelXPGain(level);
+}
+
 int NPC::getAttack() {
 	return attack;
 }

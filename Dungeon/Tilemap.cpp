@@ -182,9 +182,10 @@ void Tilemap::OnRender() {
 	for (int i = 0; i < map.size(); i++) {
 		for (int j = 0; j < map[0].size(); j++) {
 			if (fog_map[i][j]) {
-				if (map[i][j] != 0)
-					SDL_RenderCopy(ResourceManager::ren, tiletex, &GetTileRect(0), &r);
-				SDL_RenderCopy(ResourceManager::ren, tiletex, &GetTileRect(map[i][j]), &r);
+				SDL_RenderCopy(ResourceManager::ren, tiletex, &GetFloorRect(i, j), &r);
+				if (map[i][j] != 0) {
+					SDL_RenderCopy(ResourceManager::ren, tiletex, &GetTileRect(map[i][j]), &r);
+				}
 			}
 			r.x += RenderTileSize;
 		}
@@ -225,6 +226,11 @@ void Tilemap::OnRender() {
 		}
 	}
 
+}
+
+void Tilemap::EndGame()
+{
+	// TODO: Show some other screen
 }
 
 void Tilemap::DestroyObject(GameObject* go)

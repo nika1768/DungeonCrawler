@@ -5,8 +5,6 @@
 #include "NPC.h"
 #include "HeroInfo.h"
 
-using namespace std;
-
 SDL_Window* win = nullptr;
 SDL_Renderer* ren = nullptr;
 SDL_Texture* tex = nullptr;
@@ -16,29 +14,29 @@ SDL_Event e;
 int main() {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		cout << "SDL init error " << endl;
+		std::cout << "SDL init error " << std::endl;
 		return -1;
 	}
 	if (TTF_Init() != 0) {
-		cout << "TTF init error " << SDL_GetError() << endl;
+		std::cout << "TTF init error " << SDL_GetError() << std::endl;
 		SDL_Quit();
 		return -1;
 	}
 	if ((IMG_Init(IMG_INIT_PNG)) & (IMG_INIT_PNG != IMG_INIT_PNG)) {
-		cout << "IMG init errror " << SDL_GetError() << endl;
+		std::cout << "IMG init errror " << SDL_GetError() << std::endl;
 		SDL_Quit();
 		TTF_Quit();
 		return -1;
 	}
 	win = SDL_CreateWindow("MainWindow", 100, 100, ScreenWidth, ScreenHeight, SDL_WindowFlags::SDL_WINDOW_SHOWN);
 	if (win == nullptr) {
-		cout << "Window error " << SDL_GetError() << endl;
+		std::cout << "Window error " << SDL_GetError() << std::endl;
 		SDL_Quit();
 		return -1;
 	}
 	ren = SDL_CreateRenderer(win, -1, SDL_RendererFlags::SDL_RENDERER_ACCELERATED);
 	if (ren == nullptr) {
-		cout << "Renderer error " << SDL_GetError() << endl;
+		std::cout << "Renderer error " << SDL_GetError() << std::endl;
 		SDL_Quit();
 		SDL_DestroyWindow(win);
 		return -1;
@@ -74,8 +72,6 @@ int main() {
 			}
 		}
 
-		// update
-
 		// render screen
 
 		SDL_RenderClear(ren);
@@ -91,7 +87,6 @@ int main() {
 	SDL_Quit();
 	TTF_Quit();
 	IMG_Quit();
-
 
 	return 0;
 }

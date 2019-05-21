@@ -22,6 +22,8 @@ public:
 	void OnTurn();
 	void OnRender();
 
+	void EndGame();
+
 	// help functions
 	GameObject* GetObjectOnTile(SDL_Point tilepos);
 	bool CanMove(GameObject* object, SDL_Point from, SDL_Point to);

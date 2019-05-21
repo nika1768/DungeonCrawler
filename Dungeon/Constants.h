@@ -29,10 +29,19 @@ const int TILE_DOOR_CLOSED_TB = 4;
 const int TILE_DOOR_OPENED_TB = 5;
 const int TILE_SMALL_POTION = 6;
 const int TILE_BIG_POTION = 7;
+
 const int TILE_FLOOR_A = 50;
 const int TILE_FLOOR_B = 51;
 const int TILE_FLOOR_C = 52;
 const int TILE_FLOOR_D = 53;
+const int TILE_FLOOR_E = 54;
+const int TILE_FLOOR_F = 55;
+const int TILE_FLOOR_G = 56;
+const int TILE_FLOOR_H = 57;
+const int TILE_FLOOR_I = 58;
+const int TILE_FLOOR_J = 59;
+const int TILE_FLOOR_K = 60;
+const int TILE_FLOOR_L = 61;
 
 static SDL_Rect GetTileRect(int code) {
 	SDL_Rect rect;
@@ -70,4 +79,34 @@ static SDL_Rect GetTileRect(int code) {
 		rect.y = 144;
 	}
 	return rect;
+}
+
+static SDL_Rect GetFloorRect(int i, int j) {
+	int code = (i * 7 + j * 11) % 12;
+	SDL_Rect r;
+	r.w = 16;
+	r.h = 16;
+	r.x = 16 * ( 6 + (code % 4));
+	r.y = 16 * (code / 4);
+	return r;
+}
+
+// how much XP one needs to levelup in current level
+static int getLevelXPCap(int level) {
+	return 15 * level; // TODO
+}
+
+// how much life one has in said level
+static int getLevelLife(int level) {
+	return 10 * level;
+}
+
+// how much attack one has in said level
+static int getLevelAttack(int level) {
+	return 2 * level;
+}
+
+// how much xp does enemy give upon kill with such level
+static int getLevelXPGain(int level) {
+	return 4 * level;
 }

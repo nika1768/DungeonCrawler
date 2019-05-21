@@ -26,6 +26,12 @@ public:
 
 	int getLife();
 	void setLife(int value);
+	int getLevel();
+	void setLevel(int amount);
+	int getAttack();
+	void setAttack(int amount);
+	void gainXP(int amount);
+	void levelUp();
 
 
 private:
@@ -33,5 +39,6 @@ private:
 	int cur_life;
 	int level;
 	int attack;
+	int xp;
 
 };
