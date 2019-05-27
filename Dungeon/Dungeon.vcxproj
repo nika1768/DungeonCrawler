@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Dominika\source\repos\DungeonCrawler\SDLPack\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Dominika\source\repos\DungeonCrawler\SDLPack\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)SDLPack\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SDLPack\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\Dominika\source\libs\SDLPack\include;$(IncludePath)</IncludePath>
@@ -87,6 +87,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -138,6 +139,7 @@
     <ClInclude Include="Hero.h" />
     <ClInclude Include="HeroInfo.h" />
     <ClInclude Include="libs.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Tilemap.h" />

@@ -45,20 +45,20 @@
     <ClInclude Include="Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeroInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="NPC.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Hero.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="HeroInfo.h">
+      <Filter>Header Files\GameLogic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files\GameLogic</Filter>
     </ClCompile>
@@ -73,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="NPC.cpp">
       <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files\GameLogic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

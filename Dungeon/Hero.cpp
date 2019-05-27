@@ -21,7 +21,6 @@ void Hero::Move(SDL_Point& dst) {
 
 void Hero::Attack(NPC* defender) {
 
-	std::cout << "Attacking" << std::endl;
 	defender->Defend(attack);
 	
 	// killed enemy
@@ -30,7 +29,6 @@ void Hero::Attack(NPC* defender) {
 	}
 
 	ResourceManager::GetTilemap()->OnTurn();
-
 }
 
 void Hero::Defend(int amount) {
@@ -40,18 +38,20 @@ void Hero::Defend(int amount) {
 		cur_life = 0;
 		ResourceManager::GetTilemap()->EndGame();
 	}
-
 }
 
-void Hero::Heal(int percentage)
-{
+void Hero::Heal(int percentage) {
+
 	cur_life = std::min(max_life, cur_life + max_life * percentage / 100);
 }
 
 void Hero::ResolveInput(SDL_Event& e) {
+
 	SDL_Point dst = tilepos;
+
 	if (e.type == SDL_KEYUP)
 		return;
+
 	if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s) {
 		dst.y++;
 	}
@@ -64,9 +64,11 @@ void Hero::ResolveInput(SDL_Event& e) {
 	else if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d) {
 		dst.x++;
 	}
-	else if (e.key.keysym.sym == SDLK_SPACE) {
+	// debug
+	else if (e.key.keysym.sym == SDLK_SPACE) { 
 		ResourceManager::GetTilemap()->OnTurn();
 	}
+
 	GameObject* object = ResourceManager::GetTilemap()->GetObjectOnTile(dst);
 
 	if (ResourceManager::GetTilemap()->CanMove(this, tilepos, dst)) {
@@ -77,53 +79,74 @@ void Hero::ResolveInput(SDL_Event& e) {
 			Attack((NPC*)object);
 		}
 	}
-
 }
 
-int Hero::getLife()
-{
+int Hero::getLife() {
+
 	return cur_life;
 }
 
-void Hero::setLife(int value)
-{
+void Hero::setLife(int value) {
+
 	cur_life = value;
 }
 
-int Hero::getLevel()
-{
+int Hero::getLevel() {
+
 	return level;
 }
 
-void Hero::setLevel(int amount)
-{
+void Hero::setLevel(int amount) {
+
 	level = amount - 1;
 	levelUp();
 }
 
-int Hero::getAttack()
-{
+int Hero::getAttack() {
+
 	return attack;
 }
 
-void Hero::setAttack(int amount)
-{
+void Hero::setAttack(int amount) {
+
 	attack = amount;
 }
 
-void Hero::gainXP(int amount)
-{
+int Hero::getXP() {
+
+	return xp;
+}
+
+void Hero::gainXP(int amount) {
+
 	xp += amount;
 	int cap = getLevelXPCap(level);
 	if (xp >= cap) {
-		xp -= cap;
 		levelUp();
 	}
 }
 
-void Hero::levelUp()
-{
+void Hero::levelUp() {
+
 	level++;
 	max_life = getLevelLife(level);
 	attack = getLevelAttack(level);
+	ResourceManager::GetTilemap()->OnLevelUp();
+}
+
+void Hero::gainItem(int item_code) {
+
+	switch (item_code) {
+	case TILE_GOLD_KEY:
+		has_gold_key = true;
+		break;
+	}
+}
+
+bool Hero::checkItem(int item_code) {
+
+	switch (item_code) {
+	case TILE_GOLD_KEY:
+		return has_gold_key;
+	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#undef main
+#undef main // SDL issues
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <iostream>

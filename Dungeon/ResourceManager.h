@@ -9,8 +9,8 @@ class NPC;
 class Door;
 
 class ResourceManager {
-
 public:
+
 	static void Init(SDL_Renderer*);
 	static SDL_Texture* LoadTexture(std::string name);
 	static SDL_Texture* LoadTextTexture(std::string caption, Color color);
@@ -18,17 +18,18 @@ public:
 	static SDL_Rect GetRectangle(int x, int y, int w, int h);
 
 	static Tilemap* GetTilemap();
+	static void DestroyTilemap();
 
 	static Hero* GetHero();
+	static void DestroyHero();
+
 	static NPC* CreateNPC();
 	static void DestroyGameObject(GameObject* go);
 
-
-	static std::unique_ptr<Tilemap> tilemap; // TODO
+	static std::unique_ptr<Tilemap> tilemap; 
 
 	static SDL_Renderer* ren;
 	static SDL_Window* win;
-
 
 private:
 

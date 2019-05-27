@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <iostream>
 #include <random>
@@ -14,40 +13,33 @@ using MapB = std::vector<VecB>;
 class Generator {
 public:
 
-	static Map getFullMap(int w, int h, int min, int max, int room_count = -1) {
-		
-		// get empty map
-		Map map = getMap(w, h);
+	/*
+	This algorithm works as follows:
+		- create empty map (size is calculated based on number and sizes of rooms) which contains numbers corresponding to 
+		specific tile types (walls, floor, door)
+		- create empty map which contains numbers corresponding to "room blocks", same numbers = same room
+		- the algorithm will at first populate room numbers into room map randomly
+		- then it will try to expand those room numbers to fill the whole room map
+		- after filling room map, the algorithm will convert data from room map to map by omiting walls between same numbers
+		and adding walls between different numbers
+		- while creating walls, the algorithm will randomly select a point at which it will insert a door
+	*/
+	static Map getFullMap(int x_rooms, int y_rooms, int x_room_size, int y_room_size, int room_count) {
 
-		// fill it with rooms
-		if (room_count <= 0) {
-			while (findRoom(map, min, max));
-		}
-		else {
-			for (int i = 0; i < room_count; i++)
-				findRoom(map, min, max);
-		}
-
-		// remove double walls
-		RemoveDoubleWalls(map);
-
-		return map;
-
-	}
-
-	static Map getFullMap2(int x_rooms, int y_rooms, int x_room_size, int y_room_size, int room_count) {
+		// map which will be returned
 		Map map = getMap(x_rooms * x_room_size + x_rooms + 1, y_rooms * y_room_size + y_rooms + 1);
-
+		// map which labels rooms
 		Map room_map = getMap(x_rooms, y_rooms);
 
 		bool found;
 
 		// fill initial rooms
-		for (int r = 0; r < std::min(room_count,x_rooms*y_rooms); r++) {
+		for (int r = 0; r < std::min(room_count, x_rooms * y_rooms); r++) {
 
 			found = false;
-			
-			for(int trial = 0; trial < 10; trial++){
+
+			// try random positions
+			for (int trial = 0; trial < 10; trial++) {
 
 				int i = std::rand() % y_rooms;
 				int j = std::rand() % x_rooms;
@@ -61,6 +53,7 @@ public:
 					break;
 			}
 
+			// if not found, select a place deterministically
 			if (!found) {
 				for(int i = 0; i < y_rooms; i++){
 					for (int j = 0; j < x_rooms; j++) {
@@ -78,18 +71,21 @@ public:
 
 		}
 
-		// enlarge existing rooms to fill the map
+		// expand existing rooms to fill the room map
 		int actual_room_count = x_rooms * y_rooms;
 
 		while (actual_room_count > room_count) {
 			found = false;
 
+			// try random positions
 			for(int trial = 0; trial < 5; trial++){
 				int i = std::rand() % y_rooms;
 				int j = std::rand() % x_rooms;
 
+				// if > 0, there is a room already
 				if (room_map[i][j] > 0) {
 
+					// try to expand step by step 
 					if (i > 0) {
 						if (room_map[i - 1][j] == 0) {
 							room_map[i - 1][j] = room_map[i][j];
@@ -124,16 +120,15 @@ public:
 
 				if (found)
 					break;
-
 			}
 
+			// if not found at random within set number of trials, expand deterministically
 			if (!found) {
-				
-
 				for (int i = 0; i < y_rooms; i++) {
 					for (int j = 0; j < x_rooms; j++) {
-						if (room_map[i][j] > 0) {
 
+						// same as random expansion
+						if (room_map[i][j] > 0) {
 							if (i > 0) {
 								if (room_map[i - 1][j] == 0) {
 									room_map[i - 1][j] = room_map[i][j];
@@ -192,7 +187,7 @@ public:
 			map[i][map[0].size() - 1] = 1;
 		}
 
-		// walls between rooms
+		// walls between rooms and doors
 		for (int i = 0; i < y_rooms; i++) {
 			for (int j = 0; j < x_rooms; j++) {
 
@@ -211,7 +206,7 @@ public:
 					if (room_map[i][j - 1] != room_map[i][j]) {
 						int door = std::rand() % y_room_size;
 						for (int h = -1; h <= y_room_size; h++) {
-							if(h == door)
+							if (h == door)
 								map[i * y_room_size + i + 1 + h][j * x_room_size + j] = 2;
 							else
 								map[i * y_room_size + i + 1 + h][j * x_room_size + j] = 1;
@@ -221,15 +216,7 @@ public:
 
 			}
 		}
-
-		/*
-		std::cout << "Room map: " << std::endl;
-		printMap(room_map);
-		std::cout << "Map:" << std::endl;
-		printGraphicMap(map);
-		*/
 		return map;
-
 	}
 
 	static MapB getMapB(int w, int h) {
@@ -254,7 +241,39 @@ public:
 		return map;
 	}
 
+#pragma region deprecated generator
+	/*
+	It tries repeatedly to find sufficiently large empty space in which it forms new room. 
+	Even though it creates random looking maps, it encounters many problems easily avoidable by the new algorithm:
+		- it can create room which is completely isolated from the remaining room system which would require an additional 
+		algorithm for creating pass between sections
+		- because of the random placement of rooms, adding doors proved to be quite difficult, the most effective algorithm
+		would be repeated DFS to ensure that all rooms are connected by doors
+	*/
+
+	static Map getFullMap2(int w, int h, int min, int max, int room_count = -1) {
+
+		// get empty map
+		Map map = getMap(w, h);
+
+		// fill it with rooms
+		if (room_count <= 0) {
+			while (findRoom(map, min, max));
+		}
+		else {
+			for (int i = 0; i < room_count; i++)
+				findRoom(map, min, max);
+		}
+
+		// remove double walls
+		RemoveDoubleWalls(map);
+
+		return map;
+	}
+
+	// modification of algorithm for finding biggest submatrix with identical values
 	static bool findRoom(Map& map, int min = 3, int max = 10) {
+
 		if (map.size() < min && map[0].size() < min) {
 			return false;
 		}
@@ -311,8 +330,6 @@ public:
 		if (!end)
 			return false;
 		return true;
-
-
 	}
 
 	static void createRoom(Map& map, int w, int h, int x, int y) {
@@ -377,7 +394,6 @@ public:
 
 			// unexplored room around map[ri][rj]
 
-
 		}
 
 	}
@@ -404,7 +420,5 @@ public:
 			std::cout << std::endl;
 		}
 	}
-
-private:
-
+#pragma endregion
 };

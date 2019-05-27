@@ -1,24 +1,31 @@
 #pragma once
 #include "libs.h"
 
-const int TileSize = 32;
 static int ratio = 2;
-const int DefaultRenderTileSize = 64;
 static int RenderTileSize = 64;
+const int TileSize = 32;
 const int ScreenWidth = 1600;
 const int ScreenHeight = 800;
+
 const int HeroLevel = 1;
 const int AwarenessDistance = 4;
-const int font_size = 13;
+
+const int MaxDepth = 2;
+
 const int ENEMY_AWARENESS = 6;
 const int ENEMY_INITIATIVE = 2;
 const int PLAYER_SIGHT = 5;
 const int ENEMY_CHANCE = 20;
 const int POTION_CHANCE = 30;
 
+const int font_size = 13;
 const std::string font_path = "Resources/calibri.ttf";
 
-enum Color {Black};
+enum Color { Black };
+
+// RETURN CODES
+Sint32 USER_NEW_GAME = 1;
+Sint32 USER_NEXT_LEVEL = 2;
 
 // MAP CONSTS
 const int TILE_FLOOR = 0;
@@ -29,6 +36,9 @@ const int TILE_DOOR_CLOSED_TB = 4;
 const int TILE_DOOR_OPENED_TB = 5;
 const int TILE_SMALL_POTION = 6;
 const int TILE_BIG_POTION = 7;
+const int TILE_GOLD_KEY = 8;
+const int TILE_DOOR_FLOOR = 9;
+const int TILE_LADDER_FLOOR = 10;
 
 const int TILE_FLOOR_A = 50;
 const int TILE_FLOOR_B = 51;
@@ -44,6 +54,7 @@ const int TILE_FLOOR_K = 60;
 const int TILE_FLOOR_L = 61;
 
 static SDL_Rect GetTileRect(int code) {
+
 	SDL_Rect rect;
 	rect.h = 16;
 	rect.w = 16;
@@ -51,18 +62,14 @@ static SDL_Rect GetTileRect(int code) {
 	rect.y = 64;
 
 	if (code == TILE_WALL) {
-		//rect.x = 16 + 16 * std::rand() % 4;
 		rect.x = 16;
 		rect.y = 0;
 	}
 	else if (code == TILE_FLOOR) {
 		rect.x = 96;
 		rect.y = 0;
-		//rect.x = 96 + 16 * std::rand() % 4;
-		//rect.y = 0 + 16 * std::rand() % 3;
 	}
 	else if (code == TILE_DOOR_CLOSED_LR || code == TILE_DOOR_OPENED_TB) {
-		// 7 5
 		rect.x = 112;
 		rect.y = 64;
 	}
@@ -78,10 +85,23 @@ static SDL_Rect GetTileRect(int code) {
 		rect.x = 128;
 		rect.y = 144;
 	}
+	else if (code == TILE_GOLD_KEY) {
+		rect.x = 144;
+		rect.y = 144;
+	}
+	else if (code == TILE_DOOR_FLOOR) {
+		rect.x = 128;
+		rect.y = 48;
+	}
+	else if (code == TILE_LADDER_FLOOR) {
+		rect.x = 144;
+		rect.y = 48;
+	}
 	return rect;
 }
 
 static SDL_Rect GetFloorRect(int i, int j) {
+
 	int code = (i * 7 + j * 11) % 12;
 	SDL_Rect r;
 	r.w = 16;
@@ -93,7 +113,7 @@ static SDL_Rect GetFloorRect(int i, int j) {
 
 // how much XP one needs to levelup in current level
 static int getLevelXPCap(int level) {
-	return 15 * level; // TODO
+	return 15 * level * level;
 }
 
 // how much life one has in said level

@@ -2,46 +2,59 @@
 #include "ResourceManager.h"
 #include "Tilemap.h"
 #include "Hero.h"
+#include "Constants.h"
 
 NPC::NPC() {
-	
-	attack = 1;
+
+	max_life = getLevelLife(ResourceManager::GetHero()->getLevel());
+	cur_life = max_life;
+	attack = getLevelAttack(ResourceManager::GetHero()->getLevel()) - 1;
 	tex = ResourceManager::LoadTexture("Graphics/ghost.png");
 	tex_aware = ResourceManager::LoadTexture("Graphics/ghost_aware.png");
-
 }
 
 int NPC::getMaxLife() {
+
 	return max_life;
 }
 
 int NPC::getCurLife() {
+
 	return cur_life;
 }
 
 void NPC::setLife(int value) {
+
 	setMaxLife(value);
 	setCurLife(value);
 }
 
 void NPC::setMaxLife(int value) {
+
 	max_life = value;
 }
 
 void NPC::setCurLife(int value) {
+
 	cur_life = value;
 }
 
-int NPC::getXP()
-{
-	return getLevelXPGain(level);
+int NPC::getXP() {
+
+	int lvl = level;
+	std::cout << "Dying" << std::endl; // dying was moved here because of deallocated class variables
+	ResourceManager::GetTilemap()->DestroyObject(this);
+	ResourceManager::DestroyGameObject(this);
+	return getLevelXPGain(lvl);
 }
 
 int NPC::getAttack() {
+
 	return attack;
 }
 
 void NPC::setAttack(int value) {
+
 	attack = value;
 }
 
@@ -52,20 +65,13 @@ void NPC::Attack() {
 
 void NPC::Defend(int amount) {
 
-	std::cout << "Defending" << std::endl;
+	// std::cout << "Defending" << std::endl;
 	cur_life = std::max(0, cur_life - amount);
-	if (cur_life == 0) {
-		std::cout << "Dying" << std::endl;
-		ResourceManager::GetTilemap()->DestroyObject(this);
-		ResourceManager::DestroyGameObject(this);
-	}
-
 	isAware = true;
-
 }
 
-void NPC::OnTurn()
-{
+void NPC::OnTurn() {
+
 	SDL_Point dst = tilepos;
 	int rnd = std::rand() % 4;
 
@@ -109,7 +115,7 @@ void NPC::OnTurn()
 		}
 	}
 
-	// go get that obnoxious hero
+	// go get that hero
 	else {
 
 		if (ResourceManager::GetTilemap()->CanAttack(this, ResourceManager::GetHero())) {
@@ -146,12 +152,29 @@ void NPC::OnTurn()
 			}
 		}
 	}
-
 }
 
-bool NPC::CanAttack() { return true; }
+void NPC::levelUp() {
 
-SDL_Texture* NPC::getTexture()
-{
+	if (!isAware) {
+		level++;
+		max_life = getLevelLife(level);
+		cur_life = max_life;
+		attack = getLevelAttack(level);
+	}
+}
+
+bool NPC::CanAttack() { 
+
+	return true; 
+}
+
+SDL_Texture* NPC::getTexture() {
+
 	return isAware ? tex_aware : tex;
+}
+
+std::string NPC::toString() {
+
+	return "HP:" + std::to_string(cur_life) + "/" + std::to_string(max_life) + ", ATT:" + std::to_string(attack) + ", LVL:" + std::to_string(level);
 }

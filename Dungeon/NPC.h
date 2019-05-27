@@ -24,12 +24,16 @@ public:
 	void Defend(int amount);
 
 	void OnTurn() override;
+	void levelUp();
 
 	bool CanAttack() override;
 
 	SDL_Texture* getTexture() override;
+
+	std::string toString() override;
+
 private:
-	int level = -1; // TODO
+	int level = 1; 
 	int max_life = 0;
 	int cur_life = 0;
 	int attack;
