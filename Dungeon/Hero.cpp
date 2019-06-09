@@ -150,3 +150,8 @@ bool Hero::checkItem(int item_code) {
 		return has_gold_key;
 	}
 }
+
+void Hero::deleteItems() {
+	// in this version, hero can have only gold key
+	has_gold_key = false;
+}

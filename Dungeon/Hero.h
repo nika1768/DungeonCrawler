@@ -9,7 +9,7 @@ class NPC;
 class Hero : public GameObject {
 public:
 
-	Hero(int life);
+	Hero(int level);
 	~Hero() {};
 
 	void Move(SDL_Point& dst);
@@ -32,6 +32,7 @@ public:
 
 	void gainItem(int item_code);
 	bool checkItem(int item_code);
+	void deleteItems();
 
 private:
 	int max_life;

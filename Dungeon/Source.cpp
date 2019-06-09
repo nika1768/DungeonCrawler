@@ -87,6 +87,8 @@ bool NewGame() {
 		ResourceManager::DestroyHero();
 		return false;
 	}
+
+	ResourceManager::GetHero()->deleteItems();
 	return true;
 }
 

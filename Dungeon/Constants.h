@@ -24,8 +24,8 @@ const std::string font_path = "Resources/calibri.ttf";
 enum Color { Black };
 
 // RETURN CODES
-Sint32 USER_NEW_GAME = 1;
-Sint32 USER_NEXT_LEVEL = 2;
+const Sint32 USER_NEW_GAME = 1;
+const Sint32 USER_NEXT_LEVEL = 2;
 
 // MAP CONSTS
 const int TILE_FLOOR = 0;
